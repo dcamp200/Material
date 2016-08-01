@@ -1,5 +1,7 @@
 package com.example.xyzreader.ui;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
@@ -9,8 +11,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +29,7 @@ import com.example.xyzreader.data.ItemsContract;
  */
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
+    private static final String LOG_TAG = ArticleDetailActivity.class.getSimpleName();
     private Cursor mCursor;
     private long mStartId;
 
@@ -37,6 +41,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private MyPagerAdapter mPagerAdapter;
     private View mUpButtonContainer;
     private View mUpButton;
+    private ScrollingView mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,8 @@ public class ArticleDetailActivity extends AppCompatActivity
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
         setContentView(R.layout.activity_article_detail);
+
+        mScrollView = (ScrollingView) (findViewById(R.id.scrollview));
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -150,6 +157,27 @@ public class ArticleDetailActivity extends AppCompatActivity
         int upButtonNormalBottom = mTopInset + mUpButton.getHeight();
         mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
     }
+
+
+
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+
+        Log.d(LOG_TAG, "Starting animation...");
+
+        final int startScrollPos =
+                getResources().getDimensionPixelSize(R.dimen.init_scroll_up_distance);
+        Animator animator = ObjectAnimator.ofInt(
+                mScrollView,
+                "scrollY",
+                startScrollPos)
+                .setDuration(300);
+
+        animator.start();
+
+    }
+
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
