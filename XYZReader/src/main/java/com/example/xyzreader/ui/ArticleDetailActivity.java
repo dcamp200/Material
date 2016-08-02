@@ -19,6 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.ImageView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -42,10 +43,14 @@ public class ArticleDetailActivity extends AppCompatActivity
     private View mUpButtonContainer;
     private View mUpButton;
     private ScrollingView mScrollView;
+    private ImageView mPhotoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        supportPostponeEnterTransition();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
@@ -54,6 +59,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_detail);
 
         mScrollView = (ScrollingView) (findViewById(R.id.scrollview));
+        mPhotoView = (ImageView)(findViewById(R.id.photo)) ;
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -165,7 +171,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         super.onEnterAnimationComplete();
 
         Log.d(LOG_TAG, "Starting animation...");
-
         final int startScrollPos =
                 getResources().getDimensionPixelSize(R.dimen.init_scroll_up_distance);
         Animator animator = ObjectAnimator.ofInt(
@@ -173,9 +178,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                 "scrollY",
                 startScrollPos)
                 .setDuration(300);
-
         animator.start();
-
     }
 
 
