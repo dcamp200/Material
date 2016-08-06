@@ -1,16 +1,16 @@
 package com.example.xyzreader.ui;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
+import android.app.SharedElementCallback;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +25,15 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = ArticleDetailActivity.class.getSimpleName();
+    private static final String TAG = ArticleDetailActivity.class.getSimpleName();
     private Cursor mCursor;
     private long mStartId;
 
@@ -44,12 +47,19 @@ public class ArticleDetailActivity extends AppCompatActivity
     private View mUpButton;
     private ScrollingView mScrollView;
     private ImageView mPhotoView;
+    private final SharedElementCallback mCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Log.d(TAG, "Detail Activity onMapShared Elements");
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        supportPostponeEnterTransition();
+        ActivityCompat.postponeEnterTransition(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
@@ -144,6 +154,7 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
             mStartId = 0;
         }
+        ActivityCompat.startPostponedEnterTransition(this);
     }
 
     @Override
@@ -164,22 +175,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
     }
 
-
-
-    @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-
-        Log.d(LOG_TAG, "Starting animation...");
-        final int startScrollPos =
-                getResources().getDimensionPixelSize(R.dimen.init_scroll_up_distance);
-        Animator animator = ObjectAnimator.ofInt(
-                mScrollView,
-                "scrollY",
-                startScrollPos)
-                .setDuration(300);
-        animator.start();
-    }
 
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -208,4 +203,7 @@ public class ArticleDetailActivity extends AppCompatActivity
             return (mCursor != null) ? mCursor.getCount() : 0;
         }
     }
+
+
+
 }

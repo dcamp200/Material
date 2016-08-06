@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,7 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,9 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -34,7 +38,7 @@ import com.example.xyzreader.data.UpdaterService;
  */
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = ArticleListActivity.class.getSimpleName();
+    private static final String TAG = ArticleListActivity.class.getSimpleName();
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -43,7 +47,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
+        setExitSharedElementCallback(mCallback);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
@@ -117,6 +121,11 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(null);
     }
 
+
+
+
+
+
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
 
@@ -138,8 +147,8 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-                    Log.d(LOG_TAG, "thumbnail Transition name =" + vh.thumbnailView.getTransitionName());
-                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    Log.d(TAG, "Clicked thumbnail Transition name =" + vh.thumbnailView.getTransitionName());
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
                                               ArticleListActivity.this,
                                               vh.thumbnailView,
                                               vh.thumbnailView.getTransitionName()).toBundle();
@@ -166,7 +175,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 
             long id = mCursor.getLong(ArticleLoader.Query._ID);
-            Log.d(LOG_TAG, "thumbnail name =" + "imageView" + id);
+            Log.d(TAG, "thumbnail name =" + "imageView" + id);
             holder.thumbnailView.setTransitionName("imageView" + id);
         }
 
@@ -188,4 +197,18 @@ public class ArticleListActivity extends AppCompatActivity implements
             subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
         }
     }
+
+    private final SharedElementCallback mCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Log.d(TAG, "onMappedSharedElements");
+//            if (mCurrentImagePosition != mOriginalImagePosition) {
+//                View sharedView = getImageAtPosition(mCurrentImagePosition);
+//                names.clear();
+//                sharedElements.clear();
+//                names.add(sharedView.getTransitionName());
+//                sharedElements.put(sharedView.getTransitionName(), sharedView);
+//            }
+        }
+    };
 }

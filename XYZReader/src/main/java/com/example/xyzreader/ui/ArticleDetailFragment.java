@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,6 +55,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
+    private AppCompatActivity mParentActivity;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -100,7 +100,7 @@ public class ArticleDetailFragment extends Fragment implements
         // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
 
-        ((AppCompatActivity)getActivity()).supportPostponeEnterTransition();
+        mParentActivity.supportPostponeEnterTransition();
 
     }
 
@@ -129,6 +129,8 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        Log.d(TAG, "image name =" + "imageView" + mItemId);
+        mPhotoView.setTransitionName("imageView" + mItemId);
 
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
@@ -146,28 +148,34 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
         updateStatusBar();
+
         return mRootView;
     }
 
-
-
-    private void scheduleStartPostponedTransition(final View sharedElement) {
-        sharedElement.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-                        ((AppCompatActivity)getActivity()).supportStartPostponedEnterTransition();
-                        return true;
-                    }
-                });
+    public void setTransitionName(String name) {
+        mPhotoView.setTransitionName(name);
     }
+
+
+//    private void scheduleStartPostponedTransition(final View sharedElement) {
+//        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+//                new ViewTreeObserver.OnPreDrawListener() {
+//                    @Override
+//                    public boolean onPreDraw() {
+//                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+//                        Log.d(TAG, "Starting Animation: mPhoto Translastion name:" + mPhotoView.getTransitionName());
+//                        mParentActivity.startPostponedEnterTransition();
+//                        return true;
+//                    }
+//                });
+//    }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //((ArticleDetailActivity)getActivity()).scheduleStartPostponedTransition(mPhotoView);
+        mParentActivity = (AppCompatActivity)getActivity();
+
     }
 
     private void updateStatusBar() {
@@ -234,14 +242,12 @@ public class ArticleDetailFragment extends Fragment implements
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
-                                Log.d(TAG, "image name =" + "imageView" + mItemId);
-                                mPhotoView.setTransitionName("imageView" + mItemId);
-                                scheduleStartPostponedTransition(mPhotoView);
+
+                                Log.d(TAG, "mPhoto Translastion name:" + mPhotoView.getTransitionName());
+
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
                                 updateStatusBar();
-
-
 
                             }
                         }
@@ -258,6 +264,7 @@ public class ArticleDetailFragment extends Fragment implements
             bodyView.setText("N/A");
         }
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -281,6 +288,10 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         bindViews();
+
+
+
+
     }
 
     @Override
