@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -144,12 +143,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                     Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
                             ArticleListActivity.this).toBundle();
                     startActivity(intent,bundle);
-
-//                    Intent intent = new Intent(Intent.ACTION_VIEW,
-//                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-//                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this).toBundle());
-//                    startActivity(new Intent(Intent.ACTION_VIEW,
-//                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                 }
             });
             return vh;
@@ -172,8 +165,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 
             long id = mCursor.getLong(ArticleLoader.Query._ID);
-            Log.d(TAG, "thumbnail name =" + "imageView" + id);
-            holder.thumbnailView.setTransitionName("imageView" + id);
         }
 
         @Override

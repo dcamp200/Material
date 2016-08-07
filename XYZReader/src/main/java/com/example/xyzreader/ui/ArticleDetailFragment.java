@@ -100,8 +100,6 @@ public class ArticleDetailFragment extends Fragment implements
         // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
 
-        mParentActivity.supportPostponeEnterTransition();
-
     }
 
     @Override
@@ -129,8 +127,6 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-        Log.d(TAG, "image name =" + "imageView" + mItemId);
-        mPhotoView.setTransitionName("imageView" + mItemId);
 
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
@@ -156,19 +152,6 @@ public class ArticleDetailFragment extends Fragment implements
         mPhotoView.setTransitionName(name);
     }
 
-
-//    private void scheduleStartPostponedTransition(final View sharedElement) {
-//        sharedElement.getViewTreeObserver().addOnPreDrawListener(
-//                new ViewTreeObserver.OnPreDrawListener() {
-//                    @Override
-//                    public boolean onPreDraw() {
-//                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-//                        Log.d(TAG, "Starting Animation: mPhoto Translastion name:" + mPhotoView.getTransitionName());
-//                        mParentActivity.startPostponedEnterTransition();
-//                        return true;
-//                    }
-//                });
-//    }
 
 
     @Override
@@ -242,9 +225,6 @@ public class ArticleDetailFragment extends Fragment implements
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
-
-                                Log.d(TAG, "mPhoto Translastion name:" + mPhotoView.getTransitionName());
-
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
                                 updateStatusBar();
@@ -288,9 +268,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         bindViews();
-
-
-
 
     }
 

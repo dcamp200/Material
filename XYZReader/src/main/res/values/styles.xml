@@ -23,29 +23,12 @@
         <item name="colorAccent">@color/pink_a200</item>
 
 
-
-        <!--&lt;!&ndash; enable window content transitions &ndash;&gt;-->
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowActivityTransitions">true</item>
-
-        <!--<item name="android:windowExitTransition">@transition/explode</item>-->
-        <item name="android:windowExitTransition">@android:transition/slide_left</item>
-
-
-
     </style>
 
 
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowExitTransition">@android:transition/slide_left</item>
-        <!--<item name="android:windowEnterTransition">@transition/explode</item>-->
-
-        <!--<item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>-->
-        <!--<item name="android:windowReturnTransition">@transition/details_window_return_transition</item>-->
     </style>
 
 </resources>
