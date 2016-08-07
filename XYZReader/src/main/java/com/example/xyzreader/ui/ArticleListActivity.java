@@ -10,7 +10,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,9 +25,6 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -47,9 +43,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        setExitSharedElementCallback(mCallback);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
 
         ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout)).setTitle(getResources().getString(R.string.app_name));
@@ -147,12 +141,15 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-                    Log.d(TAG, "Clicked thumbnail Transition name =" + vh.thumbnailView.getTransitionName());
                     Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
-                                              ArticleListActivity.this,
-                                              vh.thumbnailView,
-                                              vh.thumbnailView.getTransitionName()).toBundle();
+                            ArticleListActivity.this).toBundle();
                     startActivity(intent,bundle);
+
+//                    Intent intent = new Intent(Intent.ACTION_VIEW,
+//                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+//                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this).toBundle());
+//                    startActivity(new Intent(Intent.ACTION_VIEW,
+//                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                 }
             });
             return vh;
@@ -198,17 +195,5 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
-    private final SharedElementCallback mCallback = new SharedElementCallback() {
-        @Override
-        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-            Log.d(TAG, "onMappedSharedElements");
-//            if (mCurrentImagePosition != mOriginalImagePosition) {
-//                View sharedView = getImageAtPosition(mCurrentImagePosition);
-//                names.clear();
-//                sharedElements.clear();
-//                names.add(sharedView.getTransitionName());
-//                sharedElements.put(sharedView.getTransitionName(), sharedView);
-//            }
-        }
-    };
+
 }

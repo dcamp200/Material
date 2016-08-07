@@ -26,7 +26,10 @@
 
         <!--&lt;!&ndash; enable window content transitions &ndash;&gt;-->
         <item name="android:windowContentTransitions">true</item>
-        <!--<item name="android:windowExitTransition">@transition/explode</item>-->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowExitTransition">@transition/explode</item>
+
+
 
 
 
